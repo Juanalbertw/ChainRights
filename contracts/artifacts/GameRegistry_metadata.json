@@ -11,19 +11,6 @@
 						"internalType": "uint256",
 						"name": "_gameId",
 						"type": "uint256"
-					}
-				],
-				"name": "buyGameLicense",
-				"outputs": [],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_gameId",
-						"type": "uint256"
 					},
 					{
 						"internalType": "address",
@@ -89,6 +76,11 @@
 					{
 						"internalType": "bool",
 						"name": "isActive",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "isInSellingPool",
 						"type": "bool"
 					},
 					{
@@ -220,12 +212,6 @@
 			"details": "Store game data and manage developer staking requirements",
 			"kind": "dev",
 			"methods": {
-				"buyGameLicense(uint256)": {
-					"details": "Buy a license for a game. This function would handle the transfer of funds and the assignment of the game license to the buyer.",
-					"params": {
-						"_gameId": "The ID of the game for which to buy a license."
-					}
-				},
 				"checkLicense(uint256,address)": {
 					"details": "Check if an address owns a license for a particular game.",
 					"params": {
@@ -272,11 +258,11 @@
 	},
 	"sources": {
 		"contracts/GameRegistry.sol": {
-			"keccak256": "0x76772da5d8196dcab21bb67f830836028da54404159c2cd4e2f58ccda9748563",
+			"keccak256": "0x3ec9f0e1aaad2a4f4cf59643397ae78641cdce914bcab1047ee0ecec89094149",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://38f94dd608c222d4f7727015e77dd1c20202e4ae765b2f50c49877a2b610c11c",
-				"dweb:/ipfs/QmTGugYp2w4DFHby7zQzMAtASTbhsKSiYEdLAQztEaRRtj"
+				"bzz-raw://f93a9a21343264b043487604d29d380512b295385864fea351d0349975c02412",
+				"dweb:/ipfs/QmXWUMfMYccvEUrgw39jgeP4gYF4qCZUCVkshKojawiyPG"
 			]
 		}
 	},

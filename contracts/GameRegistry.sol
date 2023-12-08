@@ -22,7 +22,11 @@ contract GameRegistry {
     struct License {
         uint256 licenseNumber;
         bool isActive;
+        bool isInSellingPool;
         uint256 purchaseDate;
+
+        // If license !isActive and isInSellingPool, license is about to be sold
+        // If license !isActive and !isInSellingPool, license is revoked
     }
 
     uint256 nextGameId = 1;
@@ -42,7 +46,7 @@ contract GameRegistry {
     // Mapping from developer address to amount of stake they own (not developed yet)
     mapping(address => uint256) public stake;
 
-    function sufficientStake(address _developer) private returns (bool) {
+    function sufficientStake(address _developer) private view returns (bool) {
         // Specific mechanism should be based on sales.
         // Here, stake is based on number of games published.
 
@@ -81,7 +85,7 @@ contract GameRegistry {
             developerName: _developerName,
             developer: msg.sender,
             price: _price,
-            nextGameLicense: 1
+            nextGameLicense: 1 // Game license number starts from 1 in this implementation
         });
 
         // Add the game to the developer's list of registered games
@@ -91,20 +95,22 @@ contract GameRegistry {
         
         // Note: Consider adding more logic here, such as initializing the license mapping for the game,
         // or setting up events to emit when a game is registered.
+
+        // Do we need events?
     }
 
     /**
-     * @dev Buy a license for a game. This function would handle the transfer of funds and the assignment of the game license to the buyer.
+     * @dev Create a license for a game. This function would handle the assignment of the game license to the buyer.
      * @param _gameId The ID of the game for which to buy a license.
      */
-    function buyGameLicense(uint256 _gameId) public payable {
-        // This is a placeholder function. You'll need to add actual payment handling,
-        // check that the game exists, ensure the msg.value is enough for the game's price, etc.
+    function createGameLicense(uint256 _gameId) internal {
+        // Payment handling is handled by sales contract.
 
         // Assign the game license to the buyer
         gameLicenses[_gameId][msg.sender] = License({
             licenseNumber: games[_gameId].nextGameLicense,
             isActive: true,
+            isInSellingPool: false,
             purchaseDate: block.timestamp
         });
 
@@ -120,7 +126,7 @@ contract GameRegistry {
      * @param _owner The address to check.
      * @return bool indicating whether the address owns a license for the game.
      */
-    function checkLicense(uint256 _gameId, address _owner) public view returns (bool) {
+    function checkLicense(uint256 _gameId, address _owner) public view returns (bool) {        
         // Access the License struct for the given game and user address
         License memory userLicense = gameLicenses[_gameId][_owner];
 
@@ -129,6 +135,61 @@ contract GameRegistry {
     }
 
     // Additional functions for license verification, transferring ownership, and so on, would be added here.
+    
+    function putInSellingPool(uint _gameId, address _owner) internal {
+        // Sales contract should call this function when a user wants to sell license
+
+        License memory userLicense = gameLicenses[_gameId][_owner];
+        
+        // Require that owner owns the game
+        require(userLicense.licenseNumber > 0, "Owner doesn't own the game.");
+
+        // Require that owner's license is active
+        require(userLicense.isActive, "Owner license isn't active.");
+
+        gameLicenses[_gameId][_owner].isActive = false;
+        gameLicenses[_gameId][_owner].isInSellingPool = true;
+    }
+
+    function removeFromSellingPool(uint _gameId, address _owner) internal {
+        // Sales contract should call this function when a user cancels to sell license
+
+        License memory userLicense = gameLicenses[_gameId][_owner];
+        
+        // Require that owner owns the game
+        require(userLicense.licenseNumber > 0, "Owner doesn't own the game.");
+
+        // Require that owner's license is put in the selling pool
+        require(userLicense.isInSellingPool, "Owner license isn't in selling pool.");
+
+        gameLicenses[_gameId][_owner].isActive = true;
+        gameLicenses[_gameId][_owner].isInSellingPool = false;
+    }
+
+    function transferOwnership(uint _gameId, address _owner, address _newOwner) internal  {
+        // Sales contract should call this function upon resell
+
+        License memory userLicense = gameLicenses[_gameId][_owner];
+        
+        // Require that owner owns the game
+        require(userLicense.licenseNumber > 0, "Owner doesn't own the game.");
+
+        // Require that owner's license is put in the selling pool
+        require(userLicense.isInSellingPool, "Owner license isn't in selling pool.");
+
+        // Require that newOwner doesn't own the game (in this implementation, one user can only own one license of a game)
+        require(gameLicenses[_gameId][_newOwner].licenseNumber == 0, "New user already own a license for the game.");
+
+        // Transfer ownership
+        gameLicenses[_gameId][_newOwner] = License({
+            licenseNumber: userLicense.licenseNumber,
+            isActive: true,
+            isInSellingPool: false,
+            purchaseDate: block.timestamp // we use resell timestamp
+        });
+
+        delete gameLicenses[_gameId][_owner];
+    } 
 
     // Note: You would also typically include admin functions to manage the game listings,
     // handle payments, and interact with other contracts (e.g., the token contract).
