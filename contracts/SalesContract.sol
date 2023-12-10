@@ -29,7 +29,7 @@ contract SalesContract is GameRegistry {
         address developer = games[gameId].developer;
         require(usdcToken.transfer(developer, developersShare), "Transfer to developer failed");
 
-	// Mint and send CRI tokens to the game developer
+	    // Mint and send CRI tokens to the game developer
         uint256 criAmount = calculateCRIAmount(price); 
         criToken.mintTo(developer, criAmount);
         criToken.mintTo(msg.sender, 5 * criAmount);

@@ -2,17 +2,17 @@
 
 pragma solidity ^0.8.20;
 
-contract Token{
+contract Token {
 
-    //owner of contract
+    // Owner of contract
     address owner;
     uint currentSupply;
     uint totalSupply;
 
-    //mapping from user address to their corresponding balance
+    // Mapping from user address to their corresponding balance
     mapping(address => uint256) balances;
 
-    //mapping from user address to a mapping of other address that has permission to use a certain amount of money from the user
+    // Mapping from user address to a mapping of other address that has permission to use a certain amount of money from the user
     mapping(address => mapping (address => uint256)) allowed;
     mapping(address => bool) private isMinter;
 
@@ -34,14 +34,14 @@ contract Token{
         _;
     }
 
-    // minting new Token CRI
+    // Minting new Token CRI
     function mint(uint _amount) public {
         require(isMinter[msg.sender], "Caller is not a minter");
         balances[msg.sender] += _amount;
         currentSupply += _amount;
     }
 
-    // return the balance of the address passed in the argument
+    // Return the balance of the address passed in the argument
     function balanceOf(address _user) public view returns (uint) {
         return balances[_user];
     }
@@ -64,14 +64,14 @@ contract Token{
         currentSupply += _amount;
     }
 
-    // approve someone to spend a certain amount from the message sender's account
+    // Approve someone to spend a certain amount from the message sender's account
     function approve(address _spender, uint _value) public returns (bool) {
         allowed[msg.sender][_spender] = _value;
         emit Approve(msg.sender, _spender, _value);
         return true;
     }
 
-    // return the alowed balance for the spender to deduct from the owner's account
+    // Return the allowed balance for the spender to deduct from the owner's account
     function allowance(address _owner, address _spender) public view returns (uint) {
         return allowed[_owner][_spender]; 
     }
@@ -85,7 +85,7 @@ contract Token{
         return true;
     }
 
-    // transfer money from sender to receiver
+    // Transfer money from sender to receiver
     function transferFrom(address _sender, address _receiver, uint _value) public {
         uint allowed_balance = allowed[_sender][msg.sender];
         require((balances[_sender] >= _value) && (allowed_balance >= _value)); // check if balance of sender is sufficient and the nnumber of allowance is bigger than the value

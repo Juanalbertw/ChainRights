@@ -2,10 +2,6 @@
 
 pragma solidity ^0.8.20;
 
-/**
- * @title GameRegistry
- * @dev Store game data and manage developer staking requirements
- */
 contract GameRegistry {
 
     struct GameData {
@@ -45,8 +41,7 @@ contract GameRegistry {
     mapping(address => uint256) public stake;
 
     function sufficientStake(address _developer) private view returns (bool) {
-        // Specific mechanism should be based on sales.
-        // Here, stake is based on number of games published.
+        // Stake mechanism is based on number of games published.
 
         if (developerGameRegistered[_developer].length < 3) {
             // Small developer
@@ -60,13 +55,6 @@ contract GameRegistry {
         }
     }
 
-    /**
-     * @dev Register a new game.
-     * @param _name The name of the game.
-     * @param _description The description of the game.
-     * @param _developerName The developer of the game.
-     * @param _price The price of the game.
-     */
     function registerGame(string memory _name, string memory _description, string memory _developerName, uint256 _price) public {
         // Anyone is allowed to register a game, but they must provide sufficient stake.
 
@@ -89,10 +77,6 @@ contract GameRegistry {
         nextGameId++;
     }
 
-    /**
-     * @dev Create a license for a game. This function would handle the assignment of the game license to the buyer.
-     * @param _gameId The ID of the game for which to buy a license.
-     */
     function createGameLicense(uint256 _gameId) internal {
         // Payment handling is handled by sales contract.
 
@@ -108,12 +92,6 @@ contract GameRegistry {
         userGames[msg.sender].push(_gameId);
     }
 
-    /**
-     * @dev Check if an address owns a license for a particular game.
-     * @param _gameId The ID of the game to check.
-     * @param _owner The address to check.
-     * @return bool indicating whether the address owns a license for the game.
-     */
     function checkLicense(uint256 _gameId, address _owner) public view returns (bool) {
         // Only game developer or user can check license
         require(msg.sender == _owner || msg.sender == games[_gameId].developer, "Only game developer or user is permitted to check license.");

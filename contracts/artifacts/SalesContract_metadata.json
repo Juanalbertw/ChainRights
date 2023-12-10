@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.23+commit.f704f362"
+		"version": "0.8.22+commit.4fc1097e"
 	},
 	"language": "Solidity",
 	"output": {
@@ -66,6 +66,19 @@
 						"internalType": "bool",
 						"name": "",
 						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "criToken",
+				"outputs": [
+					{
+						"internalType": "contract Token",
+						"name": "",
+						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -214,9 +227,51 @@
 						"type": "uint256"
 					}
 				],
+				"name": "revokeSell",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "gameId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					}
+				],
 				"name": "sell",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "sellingPool",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -278,27 +333,7 @@
 		],
 		"devdoc": {
 			"kind": "dev",
-			"methods": {
-				"checkLicense(uint256,address)": {
-					"details": "Check if an address owns a license for a particular game.",
-					"params": {
-						"_gameId": "The ID of the game to check.",
-						"_owner": "The address to check."
-					},
-					"returns": {
-						"_0": "bool indicating whether the address owns a license for the game."
-					}
-				},
-				"registerGame(string,string,string,uint256)": {
-					"details": "Register a new game.",
-					"params": {
-						"_description": "The description of the game.",
-						"_developerName": "The developer of the game.",
-						"_name": "The name of the game.",
-						"_price": "The price of the game."
-					}
-				}
-			},
+			"methods": {},
 			"version": 1
 		},
 		"userdoc": {
@@ -331,20 +366,28 @@
 				"dweb:/ipfs/Qmau6x4Ns9XdyynRCNNp3RhLqijJjFm7z5fyZazfYFGYdq"
 			]
 		},
-		"contracts/GameRegistry.sol": {
-			"keccak256": "0x3ec9f0e1aaad2a4f4cf59643397ae78641cdce914bcab1047ee0ecec89094149",
+		"contracts/CRI.sol": {
+			"keccak256": "0xeb2d477b1fba81cf6e877eee18164d67e2ef261cb78e9ea5c15efaa289e039f2",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://f93a9a21343264b043487604d29d380512b295385864fea351d0349975c02412",
-				"dweb:/ipfs/QmXWUMfMYccvEUrgw39jgeP4gYF4qCZUCVkshKojawiyPG"
+				"bzz-raw://1a1e7bd0f9e4240eed0f09e620a088119d998938818c3d2dc3b9bd0bbef8936d",
+				"dweb:/ipfs/QmYNotRQQgjjNXioXPAK3ijrdV4gKXmvgAqSVgCKsphffd"
+			]
+		},
+		"contracts/GameRegistry.sol": {
+			"keccak256": "0xcd863e356230f46ca8a82873e32d1eb3f0005118b960a60db0be7a5bd1e40852",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://f40603fd34b91567630ef0def721da0fff85a847f2ce3419aa2e2c1d341e2e76",
+				"dweb:/ipfs/QmTBGsdoTNEck3UTErMVMDZ688GTvAoqFgYBdpmYo5epp6"
 			]
 		},
 		"contracts/SalesContract.sol": {
-			"keccak256": "0x85fd4619d17f80d0cd2df9ddee932c429e55840fd0935c6c52a409d4e6065c73",
+			"keccak256": "0x9ba2d61a4b0cb60c99c067ab4bbdbb65cb00fb3175bfd68d8209c74a497fce53",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://9b67eafd67aba76dbadab62129ea7f3506060b10a16349c466dc5d1ab263f3fc",
-				"dweb:/ipfs/QmbSpSsBufQaZ5Rogv19wTGsHvnLJhiHQZdqxeEKwYCv1E"
+				"bzz-raw://ae612013ecb52f424d2eede79ebe68fb46b5ca9519ae46c5ab06c343ceb89c2d",
+				"dweb:/ipfs/QmY26XY7A7hQ4aTMs1u1ZykR7CgwJT3V8HD4aWNKPvBN1Y"
 			]
 		}
 	},
