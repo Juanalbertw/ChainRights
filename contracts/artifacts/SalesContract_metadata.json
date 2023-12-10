@@ -8,6 +8,48 @@
 			{
 				"inputs": [
 					{
+						"internalType": "address",
+						"name": "_usdcTokenAddress",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "gameId",
+						"type": "uint256"
+					}
+				],
+				"name": "buy",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "gameId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					}
+				],
+				"name": "buyFromSellingPool",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "uint256",
 						"name": "_gameId",
 						"type": "uint256"
@@ -167,6 +209,19 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "gameId",
+						"type": "uint256"
+					}
+				],
+				"name": "sell",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "address",
 						"name": "",
 						"type": "address"
@@ -178,6 +233,19 @@
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "usdcToken",
+				"outputs": [
+					{
+						"internalType": "contract IERC20",
+						"name": "",
+						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -209,7 +277,6 @@
 			}
 		],
 		"devdoc": {
-			"details": "Store game data and manage developer staking requirements",
 			"kind": "dev",
 			"methods": {
 				"checkLicense(uint256,address)": {
@@ -232,7 +299,6 @@
 					}
 				}
 			},
-			"title": "GameRegistry",
 			"version": 1
 		},
 		"userdoc": {
@@ -243,7 +309,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/GameRegistry.sol": "GameRegistry"
+			"contracts/SalesContract.sol": "SalesContract"
 		},
 		"evmVersion": "shanghai",
 		"libraries": {},
@@ -257,12 +323,28 @@
 		"remappings": []
 	},
 	"sources": {
+		"@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+			"keccak256": "0xc6a8ff0ea489379b61faa647490411b80102578440ab9d84e9a957cc12164e70",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://0ea104e577e63faea3b69c415637e99e755dcbf64c5833d7140c35a714d6d90c",
+				"dweb:/ipfs/Qmau6x4Ns9XdyynRCNNp3RhLqijJjFm7z5fyZazfYFGYdq"
+			]
+		},
 		"contracts/GameRegistry.sol": {
-			"keccak256": "0xd6250f93a9344bdd2c710fb63a5ea86dfcd7c0b4572c9656e88884fd92148e7e",
+			"keccak256": "0x3ec9f0e1aaad2a4f4cf59643397ae78641cdce914bcab1047ee0ecec89094149",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://8de8d182647c6d1cabaf2ac5459014530af0259d36ddd970e75ca4bc1ca83640",
-				"dweb:/ipfs/QmX8jFGW29vxxfABEaBvCsFcNwxugeUYh77SE94X1WUhWY"
+				"bzz-raw://f93a9a21343264b043487604d29d380512b295385864fea351d0349975c02412",
+				"dweb:/ipfs/QmXWUMfMYccvEUrgw39jgeP4gYF4qCZUCVkshKojawiyPG"
+			]
+		},
+		"contracts/SalesContract.sol": {
+			"keccak256": "0x85fd4619d17f80d0cd2df9ddee932c429e55840fd0935c6c52a409d4e6065c73",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://9b67eafd67aba76dbadab62129ea7f3506060b10a16349c466dc5d1ab263f3fc",
+				"dweb:/ipfs/QmbSpSsBufQaZ5Rogv19wTGsHvnLJhiHQZdqxeEKwYCv1E"
 			]
 		}
 	},
