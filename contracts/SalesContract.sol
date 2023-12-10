@@ -4,12 +4,15 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./GameRegistry.sol";
+import "./CRI.sol";
 
 contract SalesContract is GameRegistry {
     IERC20 public usdcToken;
+    Token public criToken;
 
-    constructor(address _usdcTokenAddress) {
+    constructor(address _usdcTokenAddress, address _criTokenAddress) {
         usdcToken = IERC20(_usdcTokenAddress);
+        criToken = Token(_criTokenAddress);
     }
 
     function buy(uint256 gameId) external payable {
@@ -23,13 +26,18 @@ contract SalesContract is GameRegistry {
         uint256 developersShare = price * 975 / 1000;
         address developer = games[gameId].developer;
         require(usdcToken.transfer(developer, developersShare), "Transfer to developer failed");
+
+        // Mint and send CRI tokens to the game developer
+        uint256 criAmount = calculateCRIAmount(price); 
+        criToken.mintTo(developer, criAmount);
+        criToken.mintTo(msg.sender, 5 * criAmount);
     }
 
-    function sell(uint256 gameId) public {
+    function sell(uint256 gameId, uint price) public {
         require(gameLicenses[gameId][msg.sender].isActive, "No active license to sell");
         require(!gameLicenses[gameId][msg.sender].isInSellingPool, "License already in selling pool");
 
-        putInSellingPool(gameId, msg.sender);
+        putInSellingPool(gameId, msg.sender, price);
     }
 
     function buyFromSellingPool(uint256 gameId, address owner) external payable {
@@ -49,5 +57,16 @@ contract SalesContract is GameRegistry {
         require(usdcToken.transfer(owner, ownersShare), "Transfer to owner failed");
     }
 
-    // ... [other parts of the contract]
+    function calculateCRIAmount(uint256 price) private view returns (uint256) {
+        uint256 totalSupply = criToken.getTotalSupply();
+        uint256 currentSupply = criToken.getCurrentSupply();
+
+
+        if (totalSupply == 0) {
+            return 0;
+        }
+
+        uint256 criAmount = (price) * (currentSupply / totalSupply);
+        return criAmount;
+    }
 }

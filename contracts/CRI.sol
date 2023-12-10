@@ -6,30 +6,62 @@ contract Token{
 
     //owner of contract
     address owner;
+    uint currentSupply;
+    uint totalSupply;
 
     //mapping from user address to their corresponding balance
     mapping(address => uint256) balances;
 
     //mapping from user address to a mapping of other address that has permission to use a certain amount of money from the user
     mapping(address => mapping (address => uint256)) allowed;
+    mapping(address => bool) private isMinter;
 
 
     constructor() {
+        totalSupply = 1000000000;
+        currentSupply = 0;
         owner = msg.sender;
+        isMinter[owner] = true; // Owner is a minter by default
     }
 
     event Transfer(address indexed _from, address indexed _to, uint _value);
     event Approve(address indexed _from, address indexed _to, uint _value);
+    event MinterAdded(address indexed _minter);
+    event MinterRemoved(address indexed _minter);
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only owner can perform this action");
+        _;
+    }
 
     // minting new Token CRI
     function mint(uint _amount) public {
-        require(msg.sender == owner);
+        require(isMinter[msg.sender], "Caller is not a minter");
         balances[msg.sender] += _amount;
+        currentSupply += _amount;
     }
 
     // return the balance of the address passed in the argument
     function balanceOf(address _user) public view returns (uint) {
         return balances[_user];
+    }
+
+     // Owner can add new minters
+    function addMinter(address _minter) public onlyOwner {
+        isMinter[_minter] = true;
+        emit MinterAdded(_minter);
+    }
+
+    // Owner can remove minters
+    function removeMinter(address _minter) public onlyOwner {
+        isMinter[_minter] = false;
+        emit MinterRemoved(_minter);
+    }
+
+    function mintTo(address _to, uint _amount) public {
+        require(isMinter[msg.sender], "Caller is not authorized to mint");
+        balances[_to] += _amount;
+        currentSupply += _amount;
     }
 
     // approve someone to spend a certain amount from the message sender's account
@@ -63,4 +95,13 @@ contract Token{
         emit Transfer(_sender, _receiver, _value);
     }
 
+    // Function to get the total supply of tokens
+    function getTotalSupply() public view returns (uint256) {
+        return totalSupply;
+    }
+
+    // Function to get the current supply of tokens
+    function getCurrentSupply() public view returns (uint256) {
+        return currentSupply;
+    }
 }

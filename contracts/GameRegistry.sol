@@ -136,7 +136,7 @@ contract GameRegistry {
 
     // Additional functions for license verification, transferring ownership, and so on, would be added here.
     
-    function putInSellingPool(uint _gameId, address _owner) internal {
+    function putInSellingPool(uint _gameId, address _owner, uint price) internal {
         // Sales contract should call this function when a user wants to sell license
 
         License memory userLicense = gameLicenses[_gameId][_owner];
