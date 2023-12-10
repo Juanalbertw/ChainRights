@@ -10,9 +10,11 @@ contract SalesContract is GameRegistry {
     IERC20 public usdcToken;
     Token public criToken;
 
-    constructor(address _usdcTokenAddress, address _criTokenAddress) {
+    // Mapping from game ID to license number to price
+    mapping(uint256 => mapping(uint256 => uint256)) public sellingPool;
+
+    constructor(address _usdcTokenAddress) {
         usdcToken = IERC20(_usdcTokenAddress);
-        criToken = Token(_criTokenAddress);
     }
 
     function buy(uint256 gameId) external payable {
@@ -27,7 +29,7 @@ contract SalesContract is GameRegistry {
         address developer = games[gameId].developer;
         require(usdcToken.transfer(developer, developersShare), "Transfer to developer failed");
 
-        // Mint and send CRI tokens to the game developer
+	// Mint and send CRI tokens to the game developer
         uint256 criAmount = calculateCRIAmount(price); 
         criToken.mintTo(developer, criAmount);
         criToken.mintTo(msg.sender, 5 * criAmount);
@@ -37,7 +39,23 @@ contract SalesContract is GameRegistry {
         require(gameLicenses[gameId][msg.sender].isActive, "No active license to sell");
         require(!gameLicenses[gameId][msg.sender].isInSellingPool, "License already in selling pool");
 
-        putInSellingPool(gameId, msg.sender, price);
+        // Update status of license
+        putInSellingPool(gameId, msg.sender);
+
+        // Put in selling pool
+        uint licenseNumber = gameLicenses[gameId][msg.sender].licenseNumber;
+        sellingPool[gameId][licenseNumber] = price;
+    }
+
+    function revokeSell(uint gameId) public {
+        require(gameLicenses[gameId][msg.sender].isInSellingPool, "You do not have a license in selling pool.");
+
+        // Update status of license
+        removeFromSellingPool(gameId, msg.sender);
+
+        // Remove from selling pool
+        uint licenseNumber = gameLicenses[gameId][msg.sender].licenseNumber;
+        delete sellingPool[gameId][licenseNumber];
     }
 
     function buyFromSellingPool(uint256 gameId, address owner) external payable {

@@ -8,8 +8,6 @@ pragma solidity ^0.8.20;
  */
 contract GameRegistry {
 
-// mapping(address => list(game_id))
-
     struct GameData {
         string name;
         string description;
@@ -75,9 +73,6 @@ contract GameRegistry {
         // Require that stake is sufficient.
         require(sufficientStake(msg.sender), "Insufficient stake.");
 
-        // Require that the game isn't already registered (do we need this?)
-        // require(games[_gameId].developer == address(0), "Game already registered.");
-
         // Add the new game to the mapping
         games[nextGameId] = GameData({
             name: _name,
@@ -92,11 +87,6 @@ contract GameRegistry {
         developerGameRegistered[msg.sender].push(nextGameId);
 
         nextGameId++;
-        
-        // Note: Consider adding more logic here, such as initializing the license mapping for the game,
-        // or setting up events to emit when a game is registered.
-
-        // Do we need events?
     }
 
     /**
@@ -116,8 +106,6 @@ contract GameRegistry {
 
         // Add the game to the user's list of owned games
         userGames[msg.sender].push(_gameId);
-
-        // Note: This function should emit an event after a successful purchase.
     }
 
     /**
@@ -126,17 +114,18 @@ contract GameRegistry {
      * @param _owner The address to check.
      * @return bool indicating whether the address owns a license for the game.
      */
-    function checkLicense(uint256 _gameId, address _owner) public view returns (bool) {        
+    function checkLicense(uint256 _gameId, address _owner) public view returns (bool) {
+        // Only game developer or user can check license
+        require(msg.sender == _owner || msg.sender == games[_gameId].developer, "Only game developer or user is permitted to check license.");
+               
         // Access the License struct for the given game and user address
         License memory userLicense = gameLicenses[_gameId][_owner];
 
         // Check if the license is active
         return userLicense.isActive;
     }
-
-    // Additional functions for license verification, transferring ownership, and so on, would be added here.
     
-    function putInSellingPool(uint _gameId, address _owner, uint price) internal {
+    function putInSellingPool(uint _gameId, address _owner) internal {
         // Sales contract should call this function when a user wants to sell license
 
         License memory userLicense = gameLicenses[_gameId][_owner];
@@ -189,8 +178,5 @@ contract GameRegistry {
         });
 
         delete gameLicenses[_gameId][_owner];
-    } 
-
-    // Note: You would also typically include admin functions to manage the game listings,
-    // handle payments, and interact with other contracts (e.g., the token contract).
+    }
 }

@@ -258,11 +258,11 @@
 	},
 	"sources": {
 		"contracts/GameRegistry.sol": {
-			"keccak256": "0x71b930d52971e8b0541952c24e7d3aa46dc36fdf7e591dce8cd7653358365e23",
+			"keccak256": "0x9f8113323b1d6a79a4d4efe7e46113afc7be55ff14f8a418c954059ac8e95c75",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://2ebf7695075bc73bd26c1733f3914d8511c0504f5043b6a8ce97dcfabc3927c2",
-				"dweb:/ipfs/QmQ4kLKH3jNoFeT9nxnPUMiX5ceo4MLdZwv7jLGdjk8x2b"
+				"bzz-raw://8a9953616cf840cbfe5266aa10c8ae38819cdc43f35672a07d309f6d7d9bfd64",
+				"dweb:/ipfs/QmaE95pZkQCPVjAbYsbcSQFhefFMiKGK7JDiFzi385v9EL"
 			]
 		}
 	},
